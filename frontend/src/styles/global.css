@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0f;
+    color: #f0f0f5;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0a0f; }
+  ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+}
+
+@layer components {
+  .glass {
+    background: rgba(19, 19, 26, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+  }
+
+  .glass-hover {
+    transition: all 0.3s ease;
+  }
+  .glass-hover:hover {
+    background: rgba(28, 28, 40, 0.9);
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+  }
+
+  .btn-primary {
+    @apply bg-brand-600 hover:bg-brand-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200;
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    @apply border border-surface-border text-gray-300 hover:border-brand-500 hover:text-white font-medium px-6 py-3 rounded-xl transition-all duration-200;
+  }
+
+  .card {
+    @apply glass rounded-2xl p-6 glass-hover;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .input-field {
+    @apply w-full bg-surface-hover border border-surface-border rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all;
+  }
+
+  /* AR Scan Line Animation */
+  .ar-scan-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .ar-scan-container::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #a855f7, transparent);
+    animation: scan 2s linear infinite;
+    box-shadow: 0 0 10px #a855f7;
+  }
+
+  /* Skin tone gradient pill */
+  .skin-tone-bar {
+    background: linear-gradient(to right,
+      #FDEBD0, #FAD7A0, #D4A76A, #A0522D, #5D3A1A
+    );
+    border-radius: 999px;
+    height: 8px;
+  }
+
+  /* Outfit card shimmer */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(42, 42, 58, 0) 0%,
+      rgba(168, 85, 247, 0.1) 50%,
+      rgba(42, 42, 58, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Noise grain overlay */
+.noise::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.3;
+}
+
+/* ==================== CUSTOM EFFECTS ==================== */
+/* 1. Color Fill Button (Warna mengalir dari kanan ke kiri) */
+.fill-hover {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  border: 2px solid #a855f7;
+  background: none;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.fill-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
+  background: #a855f7;
+  z-index: -1;
+  transition: all 0.4s ease;
+}
+
+.fill-hover:hover::before {
+  left: 0;
+}
+
+.fill-hover:hover {
+  color: white;
+}
+
+/* 2. Card Hover Effect (Premium Lift) */
+.card:hover {
+  box-shadow: 0 20px 25px -5px rgb(168 85 247 / 0.15),
+              0 8px 10px -6px rgb(168 85 247 / 0.1);
+  transform: translateY(-6px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,79 @@
+# ============================================================
+#  OutfitAR - Backend Requirements
+#  Python >= 3.10
+# ============================================================
+
+# --- Web Framework ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9        # File upload support
+python-jose[cryptography]==3.3.0 # JWT
+passlib[bcrypt]==1.7.4          # Password hashing
+
+# --- Database ---
+sqlalchemy==2.0.31
+aiomysql==0.2.0                 # Async MySQL driver (Laragon)
+pymysql==1.1.1                  # Sync MySQL driver
+alembic==1.13.2                 # DB migrations
+
+# --- Pydantic (Schemas & Validation) ---
+pydantic==2.8.2
+pydantic-settings==2.3.4
+
+# --- Deep Learning (CNN EfficientNet + U-Net) ---
+tensorflow==2.16.2
+keras==3.3.3
+tensorflow-hub==0.16.1
+
+# --- Computer Vision ---
+opencv-python==4.10.0.84
+opencv-contrib-python==4.10.0.84
+Pillow==10.4.0
+scikit-image==0.24.0
+
+# --- MediaPipe (Body Pose & Segmentation untuk AR) ---
+mediapipe==0.10.14
+
+# --- Machine Learning (KNN + Preprocessing) ---
+scikit-learn==1.5.1
+numpy==1.26.4
+scipy==1.13.1
+joblib==1.4.2
+
+# --- Data Processing ---
+pandas==2.2.2
+
+# --- AR & 3D (WebSocket untuk streaming) ---
+websockets==12.0
+aiofiles==24.1.0
+
+# --- Image Processing Utilities ---
+colorthief==0.2.1              # Ekstraksi warna dominan
+colormath==3.0.0               # Kalkulasi color space
+
+# --- HTTP Client (untuk scraping/proxy Shopee) ---
+httpx==0.27.0
+aiohttp==3.9.5
+
+# --- Caching ---
+redis==5.0.7
+hiredis==3.0.0
+
+# --- Environment & Config ---
+python-dotenv==1.0.1
+
+# --- Logging & Monitoring ---
+loguru==0.7.2
+
+# --- Testing ---
+pytest==8.3.2
+pytest-asyncio==0.23.8
+httpx==0.27.0                  # Test client
+
+# --- CORS ---
+# (sudah include di FastAPI)
+
+# --- Utilities ---
+python-slugify==8.0.4
+uuid==1.30
+Shapely==2.0.5                 # Geometri 2D/3D untuk AR

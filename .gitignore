@@ -1,0 +1,13 @@
+backend/venv/
+backend/__pycache__/
+frontend/node_modules/
+.env
+.venv
+
+
+backend/venv/
+frontend/node_modules/
+
+
+backend/venv_fix/
+

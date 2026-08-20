@@ -1,0 +1,101 @@
+{
+    "test_1_structure": {
+        "status": "FAILED",
+        "details": {
+            "mismatches": [
+                "head_dense should not use bias (use_bias=False)"
+            ]
+        }
+    },
+    "test_2_augmentation": {
+        "status": "PASSED",
+        "details": {
+            "iterations": 100,
+            "batch_size": 32,
+            "duration_seconds": 7.020050525665283,
+            "average_time_per_batch_ms": 70.20050525665283,
+            "output_shape": [
+                32,
+                224,
+                224,
+                3
+            ]
+        }
+    },
+    "test_3_gradients": {
+        "status": "PASSED",
+        "details": {
+            "gradient_norms": {
+                "head_dense/kernel": 15.074135780334473,
+                "head_dense/bias": 1.862820340647886e-06,
+                "head_bn/gamma": 0.45649254322052,
+                "head_bn/beta": 0.6068512201309204,
+                "skin_tone_output/kernel": 4.766880512237549,
+                "skin_tone_output/bias": 0.38591644167900085
+            },
+            "head_dense_weight_diff": 296.07574462890625,
+            "skin_tone_output_weight_diff": 0.6058861017227173
+        }
+    },
+    "test_4_class_weights": {
+        "status": "PASSED",
+        "details": {
+            "class_counts": [
+                100,
+                10,
+                2
+            ],
+            "class_weights": {
+                "0": 0.37333333333333335,
+                "1": 3.7333333333333334,
+                "2": 18.666666666666668
+            },
+            "unweighted_losses": {
+                "class_0": 1.1086626052856445,
+                "class_1": 1.1086626052856445,
+                "class_2": 1.0788096189498901
+            },
+            "weighted_losses": {
+                "class_0": 0.4139007059733073,
+                "class_1": 4.139007059733073,
+                "class_2": 20.137779553731285
+            },
+            "training_loss": 2.0106608867645264
+        }
+    },
+    "test_5_inference": {
+        "status": "PASSED",
+        "details": {
+            "batch_size_1": {
+                "classifier_shape": [
+                    1,
+                    3
+                ],
+                "extractor_shape": [
+                    1,
+                    1280
+                ]
+            },
+            "batch_size_4": {
+                "classifier_shape": [
+                    4,
+                    3
+                ],
+                "extractor_shape": [
+                    4,
+                    1280
+                ]
+            },
+            "batch_size_16": {
+                "classifier_shape": [
+                    16,
+                    3
+                ],
+                "extractor_shape": [
+                    16,
+                    1280
+                ]
+            }
+        }
+    }
+}

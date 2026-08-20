@@ -1,0 +1,13 @@
+diff --git a/backend/ml/cnn/efficientnet_backbone.py b/backend/ml/cnn/efficientnet_backbone.py
+index a1b2c3d..e4f5g6h 10064x
+--- a/backend/ml/cnn/efficientnet_backbone.py
++++ b/backend/ml/cnn/efficientnet_backbone.py
+@@ -46,7 +46,7 @@ def build_skin_tone_classifier(num_classes: int = 5) -> keras.Model:
+     x = keras.layers.Dense(
+         256,
+         activation=None,
+-        use_bias=True,
++        use_bias=False,
+         kernel_regularizer=keras.regularizers.L2(1e-4),
+         name="head_dense",
+     )(x)
