@@ -173,6 +173,20 @@ function useNgrokImage(rawPath) {
     if (!rawPath) { setStatus('error'); return }
     const resolved = buildImageUrl(rawPath)
 
+    // Untuk URL eksternal (bukan backend sendiri), langsung pakai URL tanpa fetch()
+    // fetch() ke domain lain trigger CORS preflight, sedangkan <img src> tidak
+    const isExternal = (resolved.startsWith('http://') || resolved.startsWith('https://')) &&
+      !resolved.includes('outfit-ar-production') &&
+      !resolved.includes('localhost') &&
+      !resolved.includes('ngrok') &&
+      !resolved.includes('railway.app')
+
+    if (isExternal) {
+      setBlobUrl(resolved)
+      setStatus('ok')
+      return
+    }
+
     if (imageCache.has(resolved)) {
       setBlobUrl(imageCache.get(resolved))
       setStatus('ok')
