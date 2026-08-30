@@ -102,6 +102,8 @@ def sanitize_image_url(raw_url: str) -> str:
     # Hapus spasi, ubah backslash Windows ke slash, dan perbaiki format path
     if not raw_url:
         return ""
+    if raw_url.startswith("http://") or raw_url.startswith("https://"):
+        return raw_url
     clean = raw_url.strip().replace("\\", "/")
     clean = re.sub(r'(?i)\b(products|pria|wanita|unisex)\s+', r'\1/', clean)
     lower_clean = clean.lower()
