@@ -111,13 +111,12 @@ function useNetworkStatus() {
 // ============================================================
 function generateFallbackUrls(rawPath, genderContext) {
   if (!rawPath) return [];
-  // Gunakan path relatif /uploads/* agar lewat Vite proxy
+  if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+    return [rawPath];
+  }
   const urls = [];
 
   let clean = rawPath.replace(/\\/g, '/').replace(/\/+/g, '/').trim();
-  if (clean.startsWith('http')) {
-    try { clean = new URL(clean).pathname; } catch (e) { }
-  }
   if (clean.startsWith('/')) clean = clean.substring(1);
   clean = clean.replace(/^(uploads\/|storage\/)/i, '');
   if (!clean.startsWith('products/')) clean = 'products/' + clean;

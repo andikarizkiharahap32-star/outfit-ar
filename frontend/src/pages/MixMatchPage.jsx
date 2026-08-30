@@ -9,6 +9,11 @@ import api, { BACKEND_URL, productAPI } from '../services/api';
 // Fungsi untuk membersihkan URL Gambar (Anti-Patah)
 function buildImageUrl(rawPath) {
   if (!rawPath) return '';
+  
+  if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+    return rawPath;
+  }
+  
   let clean = rawPath.replace(/\\/g, '/').replace(/\/+/g, '/').trim();
   if (clean.startsWith('/')) clean = clean.substring(1);
   clean = clean.replace(/\b(products|Pria|Wanita|Unisex)\s+/ig, '$1/');
