@@ -106,15 +106,24 @@ async def lifespan(app: FastAPI):
 
     # --- AUTO-SEED: Masukkan produk sample jika DB kosong (untuk Railway) ---
     try:
-        from database.seed_production import seed_products_if_empty
+        from database.seed_production import seed_products_if_empty, SEED_PRODUCTS
         await seed_products_if_empty(engine)
-        
-        # FIX: Bersihkan URL gambar yang salah format secara langsung di database
+
+        # FIX: Force-update image_url yang salah langsung per product_external_id
         from sqlalchemy import text
         from app.config.database import AsyncSessionFactory
         async with AsyncSessionFactory() as session:
-            await session.execute(text("UPDATE products SET image_url = REPLACE(image_url, 'products/https://', 'https://') WHERE image_url LIKE 'products/https://%'"))
+            # Fix 1: Bersihkan URL yang salah format (products/https://)
+            await session.execute(text(
+                "UPDATE products SET image_url = REPLACE(image_url, 'products/https://', 'https://') WHERE image_url LIKE 'products/https://%'"
+            ))
+            # Fix 2: Update setiap produk ke image_url yang benar berdasarkan SEED_PRODUCTS terbaru
+            for p in SEED_PRODUCTS:
+                await session.execute(text(
+                    "UPDATE products SET image_url = :url WHERE product_external_id = :ext_id AND image_url != :url"
+                ), {"url": p["image_url"], "ext_id": p["external_id"]})
             await session.commit()
+            logger.info("[Startup] Image URLs berhasil di-sync dengan SEED_PRODUCTS terbaru.")
     except Exception as seed_err:
         logger.warning(f"[Seed] Auto-seed dilewati: {seed_err}")
     
