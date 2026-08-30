@@ -83,9 +83,26 @@ async def lifespan(app: FastAPI):
     
     logger.info("[Database] Ensuring tables exist...")
     await create_tables()
-    
+
+    # --- AUTO-MIGRATION: tambah kolom yang mungkin belum ada di Railway ---
+    # Ini aman dijalankan berkali-kali karena pakai IF NOT EXISTS
+    migration_sqls = [
+        "ALTER TABLE skin_tone_detections ADD COLUMN IF NOT EXISTS gender ENUM('pria','wanita','unisex') NOT NULL DEFAULT 'pria'",
+        "ALTER TABLE recommendations ADD COLUMN IF NOT EXISTS gender ENUM('pria','wanita','unisex') NOT NULL DEFAULT 'pria'",
+        "ALTER TABLE outfit_combinations ADD COLUMN IF NOT EXISTS gender ENUM('pria','wanita','unisex') NOT NULL DEFAULT 'pria'",
+    ]
+    from sqlalchemy import text
+    async with engine.begin() as conn:
+        for sql in migration_sqls:
+            try:
+                await conn.execute(text(sql))
+                logger.info(f"[Migration] OK: {sql[:60]}...")
+            except Exception as mig_err:
+                # Log tapi jangan crash — mungkin kolom sudah ada dengan format berbeda
+                logger.warning(f"[Migration] Skipped (might already exist): {mig_err}")
+
     print_success_banner(UPLOAD_DIR)
-    logger.success(f"[Storage] Storage engine active: {UPLOAD_DIR}")
+    logger.info("[Storage] Storage engine active: {UPLOAD_DIR}")
     
     yield  # titik ini adalah saat app jalan normal, kode di bawah yield = waktu shutdown
     logger.warning("[Server] Shutting down...")
