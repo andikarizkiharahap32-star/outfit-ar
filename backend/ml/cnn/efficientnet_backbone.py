@@ -171,7 +171,7 @@ def load_model_weights(model: keras.Model, weights_path: str | Path) -> keras.Mo
         logger.warning(f"[CNN] File bobot tidak ditemukan: {path}. Menggunakan bobot ImageNet.")
         return model
 
-    model.load_weights(str(path))
+    model.load_weights(str(path), skip_mismatch=True)
     logger.info(f"[CNN] Bobot dimuat dari: {path}")
     return model
 
