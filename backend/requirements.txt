@@ -26,8 +26,8 @@ keras==3.3.3
 tensorflow-hub==0.16.1
 
 # --- Computer Vision ---
-opencv-python==4.10.0.84
-opencv-contrib-python==4.10.0.84
+opencv-python-headless==4.10.0.84
+opencv-contrib-python-headless==4.10.0.84
 Pillow==10.4.0
 scikit-image==0.24.0
 
