@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Tuple
 
+import os
 from loguru import logger
 
 # MediaPipe import dibuat lazy agar server tetap bisa start
