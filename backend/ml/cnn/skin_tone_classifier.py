@@ -24,7 +24,16 @@ except Exception as _mp_err:
     _MEDIAPIPE_AVAILABLE = False
 
 # TensorFlow/EfficientNet import dibuat lazy
+import os
+
+_TF_AVAILABLE = True
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_PROJECT_ID'):
+    _TF_AVAILABLE = False
+    logger.warning('[SkinTone] Menjalankan di Railway (Low RAM). TensorFlow CNN dimatikan. Fallback ke HSV Analysis.')
+
 try:
+    if not _TF_AVAILABLE:
+        raise ImportError('Dinonaktifkan oleh environment Railway')
     from ml.cnn.efficientnet_backbone import (
         build_skin_tone_classifier,
         load_model_weights,
@@ -154,16 +163,21 @@ class SkinToneClassifier:
             raise ValueError("Gambar terlalu kecil")
 
         try:
-            # Pipeline analisis: crop wajah → masking kulit → prediksi CNN → analisis HSV
+            # Pipeline analisis: crop wajah -> masking kulit -> prediksi CNN -> analisis HSV
             face_crop = self._extract_face_region(image_bgr)
             skin_only_bgr, skin_mask = self._apply_skin_mask(face_crop)
             
-            cnn_probs, feature_vec = self._predict_cnn(face_crop)
             hsv_level = self._analyze_hsv(skin_only_bgr, skin_mask)
-            
-            # Gabungkan hasil CNN + HSV untuk prediksi akhir
-            skin_tone_level, confidence = self._ensemble_prediction(cnn_probs, hsv_level)
             hex_color = self._extract_dominant_skin_color(skin_only_bgr, skin_mask)
+            
+            if self._model is not None:
+                cnn_probs, feature_vec = self._predict_cnn(face_crop)
+                # Gabungkan hasil CNN + HSV untuk prediksi akhir
+                skin_tone_level, confidence = self._ensemble_prediction(cnn_probs, hsv_level)
+            else:
+                skin_tone_level = hsv_level
+                confidence = 0.85
+                feature_vec = []
         except Exception as e:
             raise ValueError(f"Proses analisis wajah gagal: {str(e)}")
 
@@ -366,3 +380,4 @@ class SkinToneClassifier:
         # Tutup resource MediaPipe biar tidak memory leak
         if hasattr(self, "_face_detector"): self._face_detector.close()
         if hasattr(self, "_segmentation"): self._segmentation.close()
+
