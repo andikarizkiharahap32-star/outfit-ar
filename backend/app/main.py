@@ -108,6 +108,12 @@ async def lifespan(app: FastAPI):
     try:
         from database.seed_production import seed_products_if_empty
         await seed_products_if_empty(engine)
+        
+        # FIX: Bersihkan URL gambar yang salah format secara langsung di database
+        from sqlalchemy import text
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("UPDATE products SET image_url = REPLACE(image_url, 'products/https://', 'https://') WHERE image_url LIKE 'products/https://%'"))
+            await session.commit()
     except Exception as seed_err:
         logger.warning(f"[Seed] Auto-seed dilewati: {seed_err}")
     
