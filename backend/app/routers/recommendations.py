@@ -162,6 +162,8 @@ async def detect_skin_tone(
         raise HTTPException(status_code=500, detail="Terjadi kesalahan pada mesin AI.")
 
     # Simpan hasil deteksi ke tabel skin_tone_detections di database MySQL
+    # Catatan: gender tidak disimpan ke DB karena kolom mungkin belum ada di Railway
+    # Gender tetap dikembalikan di response dari ai_result
     detection = SkinToneDetection(
         user_id=user_id,
         skin_tone_level=ai_result.level,

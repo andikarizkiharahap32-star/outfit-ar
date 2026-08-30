@@ -184,7 +184,7 @@ class SkinToneDetection(Base):
     image_path:      Mapped[Optional[str]] = mapped_column(Text, nullable=True)        # Path gambar yang dipakai untuk deteksi
     feature_vector:  Mapped[Optional[Any]] = mapped_column(JSON, nullable=True)        # Vektor fitur wajah dari model
     detected_at:     Mapped[datetime]      = mapped_column(DateTime, server_default=func.now())
-    gender:          Mapped[GenderEnum]    = mapped_column(SQLEnum(GenderEnum), default=GenderEnum.pria)
+    gender:          Mapped[Optional[str]] = mapped_column(String(20), nullable=True, default="pria", server_default="pria")
 
     user:            Mapped[Optional[User]] = relationship("User", back_populates="detections")
     recommendations: Mapped[List["Recommendation"]] = relationship("Recommendation", back_populates="skin_tone_detection")
