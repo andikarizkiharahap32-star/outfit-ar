@@ -7,6 +7,14 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+# Terima build arguments dari Railway
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+ARG VITE_WS_URL
+ENV VITE_WS_URL=$VITE_WS_URL
+
 RUN npm run build
 
 # Serve step dengan Nginx
