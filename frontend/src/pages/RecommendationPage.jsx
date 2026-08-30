@@ -75,13 +75,13 @@ const imageCache = new Map();
 
 function buildImageUrl(rawPath) {
   if (!rawPath) return '';
-  let clean = rawPath;
 
-  if (clean.startsWith('http')) {
-    try { clean = new URL(clean).pathname; } catch (e) { }
+  // Kalau sudah URL absolut (http/https), langsung kembalikan — jangan dimodifikasi
+  if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+    return rawPath;
   }
 
-  clean = clean.replace(/\\/g, '/').replace(/\/+/g, '/').trim();
+  let clean = rawPath.replace(/\\/g, '/').replace(/\/+/g, '/').trim();
   if (clean.startsWith('/')) clean = clean.substring(1);
 
   clean = clean.replace(/\b(products|Pria|Wanita|Unisex)\s+/ig, '$1/');
