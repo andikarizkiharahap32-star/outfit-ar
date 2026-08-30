@@ -103,6 +103,13 @@ async def lifespan(app: FastAPI):
 
     print_success_banner(UPLOAD_DIR)
     logger.info("[Storage] Storage engine active: {UPLOAD_DIR}")
+
+    # --- AUTO-SEED: Masukkan produk sample jika DB kosong (untuk Railway) ---
+    try:
+        from database.seed_production import seed_products_if_empty
+        await seed_products_if_empty(engine)
+    except Exception as seed_err:
+        logger.warning(f"[Seed] Auto-seed dilewati: {seed_err}")
     
     yield  # titik ini adalah saat app jalan normal, kode di bawah yield = waktu shutdown
     logger.warning("[Server] Shutting down...")
