@@ -10,17 +10,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Konfigurasi utama aplikasi OutfitAR."""
 
-    # --- Model ML (Sinkron dengan .env) ---
-    # Menggunakan Field untuk mapping nama dari .env ke variabel kodingan
-    model_dir: str = "ml/weights"
-    unet_weights: str = "unet_tryon.h5"
-    ar_frame_rate: int = 30
-
-    # Path helper untuk mempermudah akses folder
-    @property
-    def model_weights_path(self) -> Path:
-        return Path(self.model_dir)
-
     # --- Konfigurasi Pydantic ---
     model_config = SettingsConfigDict(
         env_file=".env",

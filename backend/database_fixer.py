@@ -6,10 +6,10 @@ import mysql.connector
 
 # Konfigurasi Database (Sesuai dengan Laragon default)
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'outfit_ar'
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'database': os.getenv('DB_NAME', 'outfit_ar'),
 }
 
 # --- SMART PATH FINDER (Pelacak Folder Otomatis) ---
@@ -30,7 +30,7 @@ def fix_and_seed_database():
     Script sapu bersih database dan injeksi ulang (seeding).
     Sangat berguna saat testing atau demo presentasi skripsi jika data acak-acakan.
     """
-    print("🚀 Memulai Proses Sapu Bersih & Injeksi TOTAL Database MySQL...")
+    print("[START] Memulai Proses Sapu Bersih & Injeksi TOTAL Database MySQL...")
     
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
@@ -39,7 +39,7 @@ def fix_and_seed_database():
         # ================================================================
         # 1. EKSEKUSI SAPU BERSIH 
         # ================================================================
-        print("🧹 1. Menghapus data lama yang berantakan dan mereset ID ke 1...")
+        print("[CLEAN] 1. Menghapus data lama yang berantakan dan mereset ID ke 1...")
         
         # Matikan cek Foreign Key sementara agar bisa menghapus tabel induk tanpa error Constraint
         cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
@@ -62,12 +62,12 @@ def fix_and_seed_database():
             pass 
             
         conn.commit()
-        print("✅ Database berhasil dibersihkan total!")
+        print("[OK] Database berhasil dibersihkan total!")
 
         # ================================================================
         # 2. PROSES SEEDING SEMUA KATEGORI (PRIA, WANITA, HIJAB)
         # ================================================================
-        print("\n📦 2. Memulai injeksi data untuk SEMUA KATEGORI (Pria, Wanita, Hijab)...")
+        print("\n[INJECT] 2. Memulai injeksi data untuk SEMUA KATEGORI (Pria, Wanita, Hijab)...")
         
         # Daftar spesifikasi kategori yang akan di-scan dan dimasukkan ke database
         categories_to_seed = [
@@ -80,16 +80,16 @@ def fix_and_seed_database():
 
         for cat in categories_to_seed:
             target_dir = get_target_dir(cat['folder'])
-            print(f"\n   🔍 Memindai folder: {cat['folder']}...")
+            print(f"\n   [SCAN] Memindai folder: {cat['folder']}...")
             
             if not os.path.exists(target_dir):
-                print(f"   ⚠️ WARNING: Folder fisik '{cat['folder']}' tidak ditemukan. Melewati kategori {cat['gender']}.")
+                print(f"   [WARN] WARNING: Folder fisik '{cat['folder']}' tidak ditemukan. Melewati kategori {cat['gender']}.")
                 continue
 
             images = [f for f in os.listdir(target_dir) if f.endswith(('.jpg', '.jpeg', '.png'))]
             
             if not images:
-                print(f"   ⚠️ WARNING: Tidak ada file gambar di dalam folder '{cat['folder']}'.")
+                print(f"   [WARN] WARNING: Tidak ada file gambar di dalam folder '{cat['folder']}'.")
                 continue
 
             cat_count = 0
@@ -120,14 +120,14 @@ def fix_and_seed_database():
                 except mysql.connector.IntegrityError:
                     pass # Abaikan kalau data duplikat (id bentrok)
             
-            print(f"   ✅ Berhasil memasukkan {cat_count} produk ke kategori '{cat['gender']}'.")
+            print(f"   [OK] Berhasil memasukkan {cat_count} produk ke kategori '{cat['gender']}'.")
         
         # Simpan perubahan (WAJIB di MySQL)
         conn.commit()
-        print(f"\n🎉 SELESAI! Total {total_success} Produk dari semua kategori berhasil dimasukkan.")
+        print(f"\n[DONE] SELESAI! Total {total_success} Produk dari semua kategori berhasil dimasukkan.")
 
     except mysql.connector.Error as err:
-        print(f"💥 Error Database: {err}")
+        print(f"[ERROR] Error Database: {err}")
     finally:
         if 'conn' in locals() and conn.is_connected():
             cursor.close()

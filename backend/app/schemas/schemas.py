@@ -62,6 +62,23 @@ class ProductOut(BaseModel):
     material: Optional[str] = None
     style_tags: Optional[list] = None
     skin_tone_compat: Optional[list] = None  # Level skin tone yang cocok dengan produk ini
+
+    @field_validator("skin_tone_compat", mode="before")
+    @classmethod
+    def parse_skin_tone_compat(cls, v):
+        import json as _json
+        if isinstance(v, str):
+            try:
+                v = _json.loads(v)
+            except Exception:
+                v = None
+        if not isinstance(v, list) or len(v) == 0:
+            v = [1, 2, 3]
+        v = [c for c in v if isinstance(c, int) and 1 <= c <= 3]
+        if not v:
+            v = [1, 2, 3]
+        return v
+
     is_active: bool
 
     model_config = {"from_attributes": True}
@@ -86,7 +103,7 @@ class UserRegisterRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=200)
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=100)
-    gender: str = Field(default="pria", pattern="^(pria|wanita)$")
+    gender: str = Field(default="pria", pattern="^(pria|wanita|unisex)$")
 
     @field_validator("password")
     @classmethod
@@ -120,7 +137,7 @@ class UserOut(BaseModel):
 # Schema untuk update profil user, semua field optional karena bisa update sebagian saja
 class UserUpdateRequest(BaseModel):
     name: Optional[str] = Field(None, min_length=2, max_length=200)
-    gender: Optional[str] = Field(None, pattern="^(pria|wanita)$")
+    gender: Optional[str] = Field(None, pattern="^(pria|wanita|unisex)$")
     body_type: Optional[str] = Field(None, pattern="^(slim|regular|athletic|plus)$")
     style_pref: Optional[list[str]] = None
 

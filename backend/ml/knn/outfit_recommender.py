@@ -344,7 +344,7 @@ class KNNOutfitRecommender:
                 selected.append(cand)
                 selected_features.append(feat)
 
-        logger.debug(f"[KNN][Diversity] {len(candidates)} → {len(selected)} setelah gap={threshold}")
+        logger.debug(f"[KNN][Diversity] {len(candidates)} -> {len(selected)} setelah gap={threshold}")
         return selected
 
     # ----------------------------------------------------------

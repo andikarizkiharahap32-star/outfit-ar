@@ -24,10 +24,10 @@ def verify_engine():
         import tf_keras
         # Cek apakah modul compat tersedia (mencegah error yang tadi)
         from tensorflow.compat import v2 as _
-        logger.success(f"✅ AI Engine Verified: TF {tf.__version__} | Keras Bridge Active")
+        logger.success(f"[OK] AI Engine Verified: TF {tf.__version__} | Keras Bridge Active")
         return True
     except Exception as e:
-        logger.error(f"❌ Engine Breakdown: {str(e)}")
+        logger.error(f"[ERROR] Engine Breakdown: {str(e)}")
         return False
 
 # Load engine di awal secara global
@@ -127,12 +127,12 @@ class UNetInference:
                     by_name=True, 
                     skip_mismatch=True
                 )
-                logger.success(f"✅ Weights Partial Loaded (Hybrid Mode): {weights_path}")
+                logger.success(f"[OK] Weights Partial Loaded (Hybrid Mode): {weights_path}")
             else:
-                logger.warning("⚠️ Weights tidak ditemukan. Model berjalan dengan Random Initialization.")
+                logger.warning("[WARN] Weights tidak ditemukan. Model berjalan dengan Random Initialization.")
         except Exception as e:
             # Jika masih error, log ini akan memberitahu detailnya
-            logger.error(f"❌ Initialization Error: {e}")
+            logger.error(f"[ERROR] Initialization Error: {e}")
 
     def predict_mask(self, image_bgr: np.ndarray) -> np.ndarray:
         """Memproses frame dari OpenCV (kamera user) dan mengembalikan masker baju hitam-putih."""

@@ -114,12 +114,13 @@ function buildImageUrl(rawPath) {
   }
 
   const encoded = clean.split('/').map(seg => encodeURIComponent(decodeURIComponent(seg))).join('/');
+  
+  const base = NGROK_BACKEND_URL.replace(/\/+$/, '');
 
-  // Gunakan path relatif — Vite proxy forward /uploads/* ke backend
   if (!encoded.toLowerCase().startsWith('uploads/') && !encoded.toLowerCase().startsWith('storage/')) {
-    return `/uploads/${encoded}`;
+    return `${base}/uploads/${encoded}`;
   }
-  return `/${encoded}`;
+  return `${base}/${encoded}`;
 }
 
 // Hook Fetch Gambar

@@ -57,7 +57,7 @@ def load_image_local(product: dict) -> tuple:
 
 def main():
     logger.info("=" * 55)
-    logger.info("  OutfitAR — Batch Feature Vector Population")
+    logger.info("  OutfitAR - Batch Feature Vector Population")
     logger.info("=" * 55)
     logger.info(f"Uploads dir : {UPLOADS_DIR}")
 
@@ -145,7 +145,7 @@ def main():
                 succeeded += 1
 
             except Exception as e:
-                logger.warning(f"  ID {pid}: feature extraction error — {e}")
+                logger.warning(f"  ID {pid}: feature extraction error - {e}")
                 failed += 1
 
         # Batch UPDATE ke database

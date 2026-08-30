@@ -68,7 +68,7 @@ def test_custom_head_order_and_properties():
             assert np.isclose(layer.rate, 0.4), f"head_dropout rate must be 0.4, got {layer.rate}"
             logger.info("Verified head_dropout features: rate=0.4")
 
-    logger.info("✅ Custom head layer order and properties verified successfully!")
+    logger.info("[OK] Custom head layer order and properties verified successfully!")
 
 
 def test_gradient_propagation_and_weights_update():
@@ -142,7 +142,7 @@ def test_gradient_propagation_and_weights_update():
     logger.info(f"Verified: head_dense kernel updated by diff {dense_diff:.6f}")
     logger.info(f"Verified: head_bn gamma updated by diff {bn_gamma_diff:.6f}")
     logger.info(f"Verified: head_bn beta updated by diff {bn_beta_diff:.6f}")
-    logger.info("✅ Gradient propagation and weights update verified successfully!")
+    logger.info("[OK] Gradient propagation and weights update verified successfully!")
 
 
 def test_data_augmentation_under_load():
@@ -174,7 +174,7 @@ def test_data_augmentation_under_load():
         
     duration = time.time() - start_time
     logger.info(f"Successfully processed {steps * batch_size} images in {duration:.4f} seconds (average {(steps*batch_size)/duration:.2f} img/sec)")
-    logger.info("✅ Data augmentation pipeline under load verified successfully!")
+    logger.info("[OK] Data augmentation pipeline under load verified successfully!")
 
 
 def test_dynamic_class_weights_and_mock_training():
@@ -245,7 +245,7 @@ def test_dynamic_class_weights_and_mock_training():
     assert len(history.history['loss']) == 2, "Mock training did not complete 2 epochs"
     logger.info(f"Epoch 1 loss: {history.history['loss'][0]:.4f}, Epoch 2 loss: {history.history['loss'][1]:.4f}")
     
-    logger.info("✅ Dynamic class weights math and training integration verified successfully!")
+    logger.info("[OK] Dynamic class weights math and training integration verified successfully!")
 
 
 def test_inference_shape_stability():
@@ -305,7 +305,7 @@ def test_inference_shape_stability():
         traceback.print_exc()
         raise e
         
-    logger.info("✅ Inference and shape stability verified successfully!")
+    logger.info("[OK] Inference and shape stability verified successfully!")
 
 
 def main():
@@ -325,15 +325,15 @@ def main():
             test()
             print()
         except Exception as e:
-            logger.error(f"❌ Test {test.__name__} FAILED: {e}")
+            logger.error(f"[FAIL] Test {test.__name__} FAILED: {e}")
             failed += 1
             print()
             
     if failed == 0:
-        logger.info("🎉 All Milestone 1 stress tests passed successfully!")
+        logger.info("[DONE] All Milestone 1 stress tests passed successfully!")
         sys.exit(0)
     else:
-        logger.error(f"❌ {failed} test(s) failed.")
+        logger.error(f"[FAIL] {failed} test(s) failed.")
         sys.exit(1)
 
 if __name__ == "__main__":

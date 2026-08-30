@@ -88,12 +88,20 @@ async def main():
 
     product_ids = [p["id"] for p in products]
     product_categories = {p["id"]: p["category_id"] or 6 for p in products}
-    product_skin_compat = {
-        p["id"]: p["skin_tone_compat"] if isinstance(p["skin_tone_compat"], list)
-                 else json.loads(p["skin_tone_compat"]) if p["skin_tone_compat"]
-                 else [1,2,3,4,5]
-        for p in products
-    }
+    product_skin_compat = {}
+    for p in products:
+        compat = p["skin_tone_compat"]
+        if isinstance(compat, str):
+            try:
+                compat = json.loads(compat)
+            except Exception:
+                compat = None
+        if not isinstance(compat, list) or len(compat) == 0:
+            compat = [1, 2, 3]
+        compat = [c for c in compat if isinstance(c, int) and 1 <= c <= 3]
+        if not compat:
+            compat = [1, 2, 3]
+        product_skin_compat[p["id"]] = compat
 
     # Step 2: Feature extraction
     logger.info("[TRAIN] Mengekstrak fitur CNN (EfficientNet)...")
@@ -135,7 +143,7 @@ async def main():
     test_query = np.random.default_rng(0).random(1280).astype(np.float32)
     results = recommender.recommend(test_query, skin_tone_level=3, top_k=4)
     for r in results:
-        logger.info(f"  → Product ID={r.product_id} | Slot={r.category_slot} | Score={r.knn_score:.4f}")
+        logger.info(f"  -> Product ID={r.product_id} | Slot={r.category_slot} | Score={r.knn_score:.4f}")
 
     logger.info("=" * 60)
     logger.info("[TRAIN] SELESAI! Model siap digunakan.")

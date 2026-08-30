@@ -8,11 +8,10 @@ import uuid
 # --- KONFIGURASI ---
 # Setting database Laragon default
 db_config = {
-    "host": "127.0.0.1", # Pakai IP 127.0.0.1 agar lebih stabil daripada "localhost" di Windows
-    "user": "root",
-    "password": "", 
-    "database": "outfit_ar",
-    "port": 3306  # Pastikan ini sama dengan port MySQL yang aktif di Laragon
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'database': os.getenv('DB_NAME', 'outfit_ar'),
 }
 
 def get_dominant_color(image_path):
@@ -61,7 +60,7 @@ def setup_and_run():
         # 1. Cek Koneksi ke Database
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        print("🔗 Koneksi Database Berhasil!")
+        print("[INFO] Koneksi Database Berhasil!")
 
         # 2. Pastikan Tabel Ada (Emergency Fix kalau tabel kehapus)
         cursor.execute("""
@@ -76,15 +75,15 @@ def setup_and_run():
                 source_platform VARCHAR(50) DEFAULT 'zalora'
             )
         """)
-        print("🛠️ Struktur Tabel Dipastikan Aman.")
+        print("[INFO] Struktur Tabel Dipastikan Aman.")
 
         # Folder tempat menyimpan hasil download scraper
         base_path = os.path.join('uploads', 'products')
         if not os.path.exists(base_path):
-            print(f"❌ Folder tidak ditemukan: {base_path}")
+            print(f"[ERROR] Folder tidak ditemukan: {base_path}")
             return
 
-        print("🚀 Mulai Memasukkan Data...")
+        print("[START] Mulai Memasukkan Data...")
         
         count = 0
         # os.walk akan menelusuri semua sub-folder di dalam uploads/products
@@ -116,14 +115,14 @@ def setup_and_run():
                     count += 1
                     
                     if count % 10 == 0:
-                        print(f"📦 Terproses: {count} gambar...")
+                        print(f"[PROCESS] Terproses: {count} gambar...")
 
         # Simpan semua perubahan ke database MySQL
         conn.commit()
-        print(f"\n✅ SELESAI! {count} data masuk ke database.")
+        print(f"\n[DONE] SELESAI! {count} data masuk ke database.")
         
     except mysql.connector.Error as err:
-        print(f"❌ Error Database: {err}")
+        print(f"[ERROR] Error Database: {err}")
     finally:
         # Tutup koneksi agar tidak memory leak
         if 'conn' in locals() and conn.is_connected():

@@ -27,16 +27,16 @@ try:
     mp_pose = mp.solutions.pose
     mp_drawing = mp.solutions.drawing_utils
     mp_selfie_seg = mp.solutions.selfie_segmentation
-    logger.info("✅ MediaPipe Solutions loaded via Path A")
+    logger.info("[OK] MediaPipe Solutions loaded via Path A")
 except (AttributeError, ImportError):
     try:
         # Coba Jalur B (Direct Sub-modules) - ini sering berguna di env Anaconda/Miniconda
         import mediapipe.python.solutions.pose as mp_pose
         import mediapipe.python.solutions.drawing_utils as mp_drawing
         import mediapipe.python.solutions.selfie_segmentation as mp_selfie_seg
-        logger.info("✅ MediaPipe Solutions loaded via Path B")
+        logger.info("[OK] MediaPipe Solutions loaded via Path B")
     except Exception as e:
-        logger.error(f"❌ KEDUA JALUR GAGAL! System akan error saat init. Detail: {e}")
+        logger.error(f"[ERROR] KEDUA JALUR GAGAL! System akan error saat init. Detail: {e}")
 
 from ml.ar.unet_model import UNetInference
 
@@ -71,7 +71,7 @@ class VirtualTryOnEngine:
         
         # Validasi sebelum inisialisasi agar server tidak mati (NameError) di tengah jalan
         if mp_pose is None:
-            logger.critical("🚨 MediaPipe TIDAK TERINSTAL DENGAN BENAR. Silakan ketik: pip install mediapipe")
+            logger.critical("[CRITICAL] MediaPipe TIDAK TERINSTAL DENGAN BENAR. Silakan ketik: pip install mediapipe")
             raise ImportError("MediaPipe components are missing.")
 
         # Inisiasi CNN U-Net untuk mask generation

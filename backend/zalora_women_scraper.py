@@ -27,12 +27,12 @@ class ZaloraWomenResearchScraper:
         options.add_argument('--start-maximized')
         options.add_argument('--disable-popup-blocking')
         
-        print("🚀 Memulai Engine Scraper Wanita (Advanced Anti-Detect)...")
+        print("[INIT] Memulai Engine Scraper Wanita (Advanced Anti-Detect)...")
         try:
             # Mengunci ke versi 147 sesuai spesifikasi laptop Anda
             self.driver = uc.Chrome(options=options, version_main=147)
         except Exception as e:
-            print(f"⚠️ Mencoba mode auto-version karena: {e}")
+            print(f"[WARN] Mencoba mode auto-version karena: {e}")
             self.driver = uc.Chrome(options=options)
 
     def download_image(self, url, filename):
@@ -73,7 +73,7 @@ class ZaloraWomenResearchScraper:
                 if self.count >= self.target_count:
                     break
                 
-                print(f"\n📑 HALAMAN {page_idx} | Progress Dataset Wanita: {self.count}/{self.target_count}")
+                print(f"\n[PAGE] HALAMAN {page_idx} | Progress Dataset Wanita: {self.count}/{self.target_count}")
                 self.driver.get(url)
                 
                 # Jeda manusiawi agar tidak dicurigai bot
@@ -104,17 +104,17 @@ class ZaloraWomenResearchScraper:
                                 
                                 filename = f"women_top_{self.count}.jpg"
                                 if self.download_image(clean_url, filename):
-                                    print(f"   ✅ Berhasil: {filename} ({alt_text[:25]})")
+                                    print(f"   [OK] Berhasil: {filename} ({alt_text[:25]})")
                                     self.count += 1
                                     
                     except Exception:
                         continue
 
         except Exception as e:
-            print(f"💥 Kesalahan Fatal: {e}")
+            print(f"[ERROR] Kesalahan Fatal: {e}")
         finally:
-            print(f"\n✨ PROSES SELESAI!")
-            print(f"📊 Total Dataset Wanita Berhasil Diambil: {self.count}")
+            print(f"\n[DONE] PROSES SELESAI!")
+            print(f"[INFO] Total Dataset Wanita Berhasil Diambil: {self.count}")
             if self.driver:
                 try:
                     self.driver.quit()

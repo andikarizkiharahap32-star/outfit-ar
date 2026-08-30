@@ -35,12 +35,12 @@ class ZaloraResearchScraper:
         options.add_argument('--password-store=basic')
         options.add_argument('--start-maximized') # Fullscreen agar lebih banyak gambar yang di-render
         
-        print("🚀 Menyiapkan Engine Scraper (Anti-Detect Mode)...")
+        print("[INIT] Menyiapkan Engine Scraper (Anti-Detect Mode)...")
         try:
             # Mengunci ke versi Chrome tertentu (misal 147) agar ChromeDriver tidak mismatch
             self.driver = uc.Chrome(options=options, version_main=147)
         except Exception as e:
-            print(f"⚠️ Mencoba inisialisasi ulang driver: {e}")
+            print(f"[WARN] Mencoba inisialisasi ulang driver: {e}")
             # Fallback jika versi 147 gagal
             self.driver = uc.Chrome(options=options)
 
@@ -60,7 +60,7 @@ class ZaloraResearchScraper:
                     f.write(response.content)
                 return True
         except Exception as e:
-            print(f"   ❌ Gagal download {filename}: {e}")
+            print(f"   [FAIL] Gagal download {filename}: {e}")
         return False
 
     def scrape(self):
@@ -75,7 +75,7 @@ class ZaloraResearchScraper:
                 if self.count >= self.target_count:
                     break
                 
-                print(f"\n📑 MEMPROSES HALAMAN {page_idx} | Progress: {self.count}/{self.target_count}")
+                print(f"\n[PAGE] MEMPROSES HALAMAN {page_idx} | Progress: {self.count}/{self.target_count}")
                 self.driver.get(url)
                 
                 # Human-like wait (Random delay 6-10 detik agar tidak dikira bot spam)
@@ -110,20 +110,20 @@ class ZaloraResearchScraper:
                                 
                                 filename = f"zalora_research_{self.count}.jpg"
                                 if self.download_image(clean_url, filename):
-                                    print(f"   ✅ Saved: {filename} ({alt_text[:30]}...)")
+                                    print(f"   [OK] Saved: {filename} ({alt_text[:30]}...)")
                                     self.count += 1
                                     
                     except:
                         continue
 
         except Exception as e:
-            print(f"💥 Fatal Error: {e}")
+            print(f"[ERROR] Fatal Error: {e}")
         finally:
             self.finish()
 
     def finish(self):
         """Menutup browser setelah selesai."""
-        print(f"\n🎯 SELESAI! Total data untuk skripsi: {self.count} gambar.")
+        print(f"\n[DONE] SELESAI! Total data untuk skripsi: {self.count} gambar.")
         if self.driver:
             try:
                 self.driver.close()

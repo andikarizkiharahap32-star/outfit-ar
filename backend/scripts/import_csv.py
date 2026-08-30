@@ -275,9 +275,9 @@ def main(csv_path: str) -> None:
     # Koneksi database
     try:
         conn = get_connection()
-        logger.success("✓ Koneksi MySQL berhasil")
+        logger.success("[OK] Koneksi MySQL berhasil")
     except Exception as exc:
-        logger.error(f"✗ Gagal konek MySQL: {exc}")
+        logger.error(f"[FAIL] Gagal konek MySQL: {exc}")
         logger.info("Pastikan Laragon berjalan dan database 'outfit_ar' sudah dibuat!")
         sys.exit(1)
 
@@ -285,7 +285,7 @@ def main(csv_path: str) -> None:
     total = insert_products(rows, conn)
     conn.close()
 
-    logger.success(f"✓ Selesai! {total} produk berhasil dimasukkan ke database")
+    logger.success(f"[DONE] Selesai! {total} produk berhasil dimasukkan ke database")
 
 
 if __name__ == "__main__":

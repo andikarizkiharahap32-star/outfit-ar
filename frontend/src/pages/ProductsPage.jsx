@@ -124,20 +124,22 @@ function generateFallbackUrls(rawPath, genderContext) {
 
   const filename = clean.split('/').pop();
 
+  const base = NGROK_BACKEND_URL.replace(/\/+$/, '');
+
   if (genderContext) {
     let folder = '';
     const g = genderContext.toLowerCase();
     if (g === 'pria') folder = 'Pria';
     else if (g === 'wanita') folder = 'Wanita';
     else if (g === 'wanitahijab') folder = 'wanitahijab';
-    if (folder) urls.push(`/uploads/products/${folder}/${filename}`);
+    if (folder) urls.push(`${base}/uploads/products/${folder}/${filename}`);
   }
 
-  urls.push(`/uploads/${clean}`);
-  urls.push(`/uploads/products/wanitahijab/${filename}`);
-  urls.push(`/uploads/products/Wanita/${filename}`);
-  urls.push(`/uploads/products/Pria/${filename}`);
-  urls.push(`/uploads/products/${filename}`);
+  urls.push(`${base}/uploads/${clean}`);
+  urls.push(`${base}/uploads/products/wanitahijab/${filename}`);
+  urls.push(`${base}/uploads/products/Wanita/${filename}`);
+  urls.push(`${base}/uploads/products/Pria/${filename}`);
+  urls.push(`${base}/uploads/products/${filename}`);
 
   return [...new Set(urls)];
 }
@@ -297,7 +299,7 @@ const api = {
 
     try {
       // Gunakan path relatif agar lewat Vite proxy (bekerja di laptop & HP)
-      const res = await fetch(`/api/v1/products/?${params}`, {
+      const res = await fetch(`${NGROK_BACKEND_URL}/api/v1/products/?${params}`, {
         headers: NGROK_HEADERS, signal: controller.signal
       })
       clearTimeout(timeoutId);

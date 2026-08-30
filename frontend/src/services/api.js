@@ -10,10 +10,9 @@ import axios from 'axios';
 export const BACKEND_URL = import.meta.env.VITE_API_URL || '';
 
 //Sisi Frontend (Yang Mengirim Request) Front To Backend
-// Gunakan baseURL relatif (/api/v1) agar request HP lewat Vite proxy
-// Vite proxy otomatis forward /api/* ke http://localhost:8000
+// Gunakan baseURL dari BACKEND_URL, atau relatif (/api/v1) agar request HP lewat Vite proxy
 const api = axios.create({
-  baseURL: `/api/v1`,
+  baseURL: BACKEND_URL ? `${BACKEND_URL.replace(/\/+$/, '')}/api/v1` : `/api/v1`,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -139,9 +138,23 @@ export const arAPI = {
 
 // Buat koneksi WebSocket untuk AR real-time
 // Otomatis deteksi host dari window.location agar bekerja di laptop & HP
+export const WS_URL = import.meta.env.VITE_WS_URL || '';
+
 export function createARWebSocket(productId) {
-  const proto  = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const wsUrl  = `${proto}//${window.location.host}/api/v1/ar/tryon/realtime/${productId}`;
+  let wsUrl = '';
+  if (WS_URL) {
+    const base = WS_URL.replace(/\/+$/, '');
+    wsUrl = `${base}/api/v1/ar/tryon/realtime/${productId}`;
+  } else if (BACKEND_URL) {
+    const base = BACKEND_URL.replace(/\/+$/, '');
+    const proto = base.startsWith('https') ? 'wss:' : 'ws:';
+    const host = base.replace(/^https?:\/\//, '');
+    wsUrl = `${proto}//${host}/api/v1/ar/tryon/realtime/${productId}`;
+  } else {
+    const proto  = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    wsUrl = `${proto}//${window.location.host}/api/v1/ar/tryon/realtime/${productId}`;
+  }
+  
   console.log("[AR] Inisialisasi WebSocket AR:", wsUrl);
   return new WebSocket(wsUrl);
 }

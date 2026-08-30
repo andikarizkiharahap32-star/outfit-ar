@@ -53,7 +53,7 @@ def print_success_banner(actual_path):
 {"="*85}
 STATUS      : ONLINE & READY
 DATASET     : 947+ Zalora Products Loaded
-BACKEND     : http://localhost:8001
+BACKEND     : http://localhost:8000
 UPLOADS     : /uploads mapped to -> {actual_path}
 SECURITY    : Strict CORS Middleware (Auto-handled)
 {"="*85}

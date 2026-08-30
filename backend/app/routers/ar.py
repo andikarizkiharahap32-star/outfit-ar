@@ -59,9 +59,9 @@ def get_ar_engine():
         root = get_root_dir()
         # Coba beberapa kemungkinan path file weights agar fleksibel di berbagai environment
         possible_paths = [
-            root / "ml" / "weights" / "unet_final.h5",
-            root / "app" / "ml" / "weights" / "unet_final.h5",
-            Path(r"C:\Final_outfitAR\outfit-ar\backend\ml\weights\unet_final.h5"),
+            root / "ml" / "weights" / settings.unet_weights,
+            root / "app" / "ml" / "weights" / settings.unet_weights,
+            Path(r"C:\Final_outfitAR\outfit-ar\backend\ml\weights") / settings.unet_weights,
         ]
 
         unet_weights = None
@@ -144,7 +144,7 @@ async def load_product(db: AsyncSession, product_id: str):
 
     # Kalau tidak ketemu sebagai int, coba lagi dengan string (untuk product_external_id)
     if product is None and isinstance(lookup_id, int):
-        result = await db.execute(select(Product).where(Product.id == str(lookup_id)))
+        result = await db.execute(select(Product).where(Product.product_external_id == str(lookup_id)))
         product = result.scalar_one_or_none()
 
     return product
@@ -285,7 +285,7 @@ async def tryon_photo(user_photo: UploadFile = File(...), product_id: int = 0, d
     raise NotImplementedError("Endpoint photo try-on belum diaktifkan. Pakai websocket realtime.")
 
 
-@router.get("/sessions", response_model=ARSessionResponse)
+@router.get("/sessions")
 async def list_ar_sessions(user_id: int | None = None, db: AsyncSession = Depends(get_db_session)):
     # Ambil 20 sesi AR terbaru — bisa difilter per user_id kalau pengguna sudah login
     q = select(ARSession).order_by(ARSession.created_at.desc()).limit(20)

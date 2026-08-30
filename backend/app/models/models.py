@@ -24,7 +24,6 @@ from app.config.database import Base
 class GenderEnum(str, enum.Enum):
     pria = 'pria'
     wanita = 'wanita'
-    wanitahijab = 'wanitahijab'
     unisex = 'unisex'
 
 # Enum platform sumber scraping produk
@@ -57,8 +56,8 @@ class Category(Base):
     __tablename__ = "categories"
 
     id:         Mapped[int]           = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name:       Mapped[str]           = mapped_column(String(100), nullable=False)
-    slug:       Mapped[str]           = mapped_column(String(100), nullable=False, unique=True)  # URL-friendly name, harus unik
+    name:       Mapped[str]           = mapped_column(String(200), nullable=False)
+    slug:       Mapped[str]           = mapped_column(String(200), nullable=False, unique=True)  # URL-friendly name, harus unik
     parent_id:  Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("categories.id", ondelete="SET NULL"), nullable=True)  # NULL = kategori root (tidak punya parent)
     created_at: Mapped[datetime]      = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime]      = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
@@ -185,6 +184,7 @@ class SkinToneDetection(Base):
     image_path:      Mapped[Optional[str]] = mapped_column(Text, nullable=True)        # Path gambar yang dipakai untuk deteksi
     feature_vector:  Mapped[Optional[Any]] = mapped_column(JSON, nullable=True)        # Vektor fitur wajah dari model
     detected_at:     Mapped[datetime]      = mapped_column(DateTime, server_default=func.now())
+    gender:          Mapped[GenderEnum]    = mapped_column(SQLEnum(GenderEnum), default=GenderEnum.pria)
 
     user:            Mapped[Optional[User]] = relationship("User", back_populates="detections")
     recommendations: Mapped[List["Recommendation"]] = relationship("Recommendation", back_populates="skin_tone_detection")
@@ -205,6 +205,7 @@ class Recommendation(Base):
     skin_tone_id:    Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("skin_tone_detections.id", ondelete="SET NULL"), nullable=True)
     outfit_set:      Mapped[Any]           = mapped_column(JSON, nullable=False)         # Daftar produk yang direkomendasikan (JSON array)
     knn_scores:      Mapped[Any]           = mapped_column(JSON, nullable=False)         # Skor KNN tiap produk
+    gender:          Mapped[GenderEnum]    = mapped_column(SQLEnum(GenderEnum), default=GenderEnum.pria)
     diversity_score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)      # Seberapa beragam outfit yang direkomendasikan
     algorithm_ver:   Mapped[str]           = mapped_column(String(50), default="v1.0")  # Versi algoritma untuk keperluan audit
     is_accepted:     Mapped[Optional[bool]] = mapped_column(Boolean, nullable=True)     # Apakah user menerima rekomendasi ini
@@ -269,6 +270,7 @@ class OutfitCombination(Base):
     id:              Mapped[int]           = mapped_column(Integer, primary_key=True, autoincrement=True)
     name:            Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     products:        Mapped[Any]           = mapped_column(JSON, nullable=False)           # Array product_id yang membentuk kombinasi outfit ini
+    gender:          Mapped[GenderEnum]    = mapped_column(SQLEnum(GenderEnum), default=GenderEnum.pria)
     style_category:  Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)  # Misal: "casual", "formal", "streetwear"
     skin_tone_range: Mapped[Optional[Any]] = mapped_column(JSON, nullable=True)            # Range level skin tone yang cocok
     color_harmony:   Mapped[Optional[str]] = mapped_column(String(50), nullable=True)     # Tipe harmoni warna, misal: "complementary"

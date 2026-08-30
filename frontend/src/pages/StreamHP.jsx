@@ -458,7 +458,7 @@ export default function StreamHP() {
     if (selectedProduct || !productId) return;
     let cancelled = false;
     // Gunakan path relatif /api/v1 agar lewat Vite proxy (bekerja di HP & laptop)
-    fetch(`/api/v1/products/${productId}`, { headers: NGROK_HEADERS })
+    fetch(`${NGROK_BACKEND_URL}/api/v1/products/${productId}`, { headers: NGROK_HEADERS })
       .then(r => (r.ok ? r.json() : null))
       .then(data => {
         if (cancelled || !data) return;

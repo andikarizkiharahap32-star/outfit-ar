@@ -94,7 +94,7 @@ def main():
             if updates:
                 cursor.executemany("UPDATE products SET color = %s WHERE id = %s", updates)
                 connection.commit()
-                logger.info(f"✅ Berhasil memperbarui {len(updates)} produk dengan warna asli!")
+                logger.info(f"[OK] Berhasil memperbarui {len(updates)} produk dengan warna asli!")
                 
     except Exception as e:
         logger.error(f"Error: {e}")

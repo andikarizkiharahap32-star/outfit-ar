@@ -77,3 +77,10 @@ httpx==0.27.0                  # Test client
 python-slugify==8.0.4
 uuid==1.30
 Shapely==2.0.5                 # Geometri 2D/3D untuk AR
+
+# --- Missing dependencies (audit fix) ---
+imbalanced-learn
+deepface
+undetected-chromedriver
+selenium
+mysql-connector-python

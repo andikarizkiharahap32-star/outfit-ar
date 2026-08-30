@@ -44,7 +44,7 @@ try:
     from deepface import DeepFace
     _DEEPFACE_AVAILABLE = True
 except Exception as _df_err:
-    logger.warning(f"⚠️ DeepFace tidak bisa diload: {_df_err}. Fitur face analysis dinonaktifkan.")
+    logger.warning(f"[WARN] DeepFace tidak bisa diload: {_df_err}. Fitur face analysis dinonaktifkan.")
     DeepFace = None
     _DEEPFACE_AVAILABLE = False
 
