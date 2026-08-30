@@ -17,9 +17,6 @@ from loguru import logger
 # MediaPipe import dibuat lazy agar server tetap bisa start
 # meski TensorFlow DLL diblokir Windows Application Control Policy
 _MEDIAPIPE_AVAILABLE = True
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_PROJECT_ID'):
-    _MEDIAPIPE_AVAILABLE = False
-    logger.warning("[SkinTone] Menjalankan di Railway. MediaPipe dinonaktifkan untuk menghemat RAM.")
 
 try:
     if not _MEDIAPIPE_AVAILABLE:
@@ -34,9 +31,6 @@ except Exception as _mp_err:
 import os
 
 _TF_AVAILABLE = True
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_PROJECT_ID'):
-    _TF_AVAILABLE = False
-    logger.warning('[SkinTone] Menjalankan di Railway (Low RAM). TensorFlow CNN dimatikan. Fallback ke HSV Analysis.')
 
 try:
     if not _TF_AVAILABLE:
@@ -57,9 +51,6 @@ except Exception as _tf_err:
 # DeepFace import dibuat lazy agar server tetap bisa start
 # meski ada masalah dependency (e.g. gdown metadata missing)
 _DEEPFACE_AVAILABLE = True
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_PROJECT_ID'):
-    _DEEPFACE_AVAILABLE = False
-    logger.warning("[SkinTone] Menjalankan di Railway. DeepFace dinonaktifkan untuk menghemat RAM.")
 
 try:
     if not _DEEPFACE_AVAILABLE:
