@@ -6,28 +6,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
-// Preload GLB di background saat ProductsPage dibuka
-// Saat user klik AR, model sudah ada di browser cache → muncul instan
-const GLB_PRELOAD_URLS = [
-  '/models/PriaShort.glb',
-  '/models/PriaPolo.glb',
-  '/models/Wanita.glb',
-  '/models/WanitaBerhijab.glb',
-];
-GLB_PRELOAD_URLS.forEach(url => {
-  // Pakai link rel=prefetch agar browser cache file ini
-  if (typeof document !== 'undefined') {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = url;
-    link.as = 'fetch';
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  }
-  // Sekaligus fetch ke cache JS (untuk GLTFLoader.parse)
-  fetch(url, { priority: 'low' }).catch(() => {});
-});
-
 
 // ============================================================
 // ⚙️ [LAYER 1] KONFIGURASI GLOBAL
