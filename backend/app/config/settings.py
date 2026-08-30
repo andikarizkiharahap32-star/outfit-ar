@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     workers: int = 1
 
     # --- Database MySQL ---
+    database_url: str | None = None  # Tambahan untuk Railway
     db_host: str = "localhost"
     db_port: int = 3306
     db_name: str = "outfit_ar"
@@ -89,8 +90,10 @@ class Settings(BaseSettings):
     log_file: str = "./logs/outfit_ar.log"
 
     @property
-    def database_url(self) -> str:
+    def sync_database_url(self) -> str:
         """Sync MySQL URL untuk Alembic migrations."""
+        if self.database_url:
+            return self.database_url.replace("mysql://", "mysql+pymysql://")
         return (
             f"mysql+pymysql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
@@ -100,6 +103,8 @@ class Settings(BaseSettings):
     @property
     def async_database_url(self) -> str:
         """Async MySQL URL untuk SQLAlchemy async."""
+        if self.database_url:
+            return self.database_url.replace("mysql://", "mysql+aiomysql://")
         return (
             f"mysql+aiomysql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"

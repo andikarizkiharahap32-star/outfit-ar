@@ -14,7 +14,7 @@ from loguru import logger
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from app.config.settings import get_settings
-from app.config.database import engine
+from app.config.database import engine, create_tables
 from app.routers import products, users, recommendations, ar, health
 
 # --- 1. LOGGING SETUP ---
@@ -80,6 +80,9 @@ async def lifespan(app: FastAPI):
     if not os.path.exists(UPLOAD_DIR):
         os.makedirs(UPLOAD_DIR, exist_ok=True)
         logger.info(f"[Storage] New folder created: {UPLOAD_DIR}")
+    
+    logger.info("[Database] Ensuring tables exist...")
+    await create_tables()
     
     print_success_banner(UPLOAD_DIR)
     logger.success(f"[Storage] Storage engine active: {UPLOAD_DIR}")
