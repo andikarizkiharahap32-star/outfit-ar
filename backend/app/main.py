@@ -111,7 +111,8 @@ async def lifespan(app: FastAPI):
         
         # FIX: Bersihkan URL gambar yang salah format secara langsung di database
         from sqlalchemy import text
-        async with AsyncSessionLocal() as session:
+        from app.config.database import AsyncSessionFactory
+        async with AsyncSessionFactory() as session:
             await session.execute(text("UPDATE products SET image_url = REPLACE(image_url, 'products/https://', 'https://') WHERE image_url LIKE 'products/https://%'"))
             await session.commit()
     except Exception as seed_err:
