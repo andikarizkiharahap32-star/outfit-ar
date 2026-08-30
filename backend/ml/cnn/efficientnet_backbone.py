@@ -21,8 +21,8 @@ def build_skin_tone_classifier(num_classes: int = 5) -> keras.Model:
 
     Arsitektur (urutan benar):
         Input → EfficientNet-B0 (pretrained) → GlobalAvgPool
-               → Dense(256, linear) → BatchNorm → ReLU → Dropout(0.4)
-               → Dense(num_classes, softmax)
+              → Dense(512, linear) → BatchNorm → ReLU → Dropout(0.4)
+              → Dense(num_classes, softmax)
 
     Args:
         num_classes: Jumlah kelas skin tone (3: dark/fair/light)
@@ -50,7 +50,7 @@ def build_skin_tone_classifier(num_classes: int = 5) -> keras.Model:
     # Head: Dense(linear) → BatchNorm → ReLU → Dropout  [urutan standar]
     # Linear dulu sebelum BN biar normalisasi berjalan benar
     x       = keras.layers.Dense(
-        256,
+        512,
         activation="linear",        # linear dulu, aktivasi setelah BN
         use_bias=True,
         kernel_regularizer=keras.regularizers.L2(1e-4),  # L2 regularization cegah overfitting
