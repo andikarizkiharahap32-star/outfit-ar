@@ -51,10 +51,13 @@ try:
     WEIGHTS_PATH = os.path.join("ml", "weights", "best_skin_tone_model.keras")
     skin_classifier = SkinToneClassifier(weights_path=WEIGHTS_PATH)
     logger.info("[OK] BINGO! Model AI Skin Tone berhasil dimuat ke dalam memori.")
+    AI_LOAD_ERROR = None
 except Exception as e:
     logger.error(f"[ERROR] GAGAL memuat model AI: {e}")
     # Jika model gagal dimuat, set None dan sistem akan throw HTTP 500 saat ada request
     skin_classifier = None
+    import traceback
+    AI_LOAD_ERROR = traceback.format_exc()
 
 
 # --- UTILITY 1: KONVERSI WARNA (HEX/TEKS → RGB NumPy) ---
@@ -128,7 +131,7 @@ async def detect_skin_tone(
     
     # Kalau model AI belum berhasil dimuat saat server startup, langsung tolak request
     if skin_classifier is None:
-        raise HTTPException(status_code=500, detail="Mesin AI sedang offline/rusak.")
+        raise HTTPException(status_code=500, detail=f"Mesin AI sedang offline/rusak. Error detail: {AI_LOAD_ERROR}")
 
     try:
         # Baca bytes dari file gambar yang diupload, ubah ke format numpy array agar bisa diproses OpenCV
