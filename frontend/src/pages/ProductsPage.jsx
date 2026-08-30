@@ -35,7 +35,7 @@ GLB_PRELOAD_URLS.forEach(url => {
 // Gunakan URL relatif agar request lewat Vite proxy
 // Laptop: Vite langsung forward ke localhost:8000
 // HP: Cloudflare → Vite → localhost:8000 (tanpa CORS)
-const NGROK_BACKEND_URL = '';
+const NGROK_BACKEND_URL = import.meta.env.VITE_API_URL || '';
 
 const NGROK_HEADERS = {
   "ngrok-skip-browser-warning": "69420",

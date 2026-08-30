@@ -385,7 +385,7 @@ function ARScene({ modelPath, scale, position, poseLandmarksRef, productColor })
 // ─── Config Backend ───────────────────────────────────────────────────────────
 // Gunakan URL relatif agar semua request lewat Vite proxy
 // HP (Cloudflare) dan Laptop (localhost) bekerja tanpa CORS issue
-const NGROK_BACKEND_URL = '';
+const NGROK_BACKEND_URL = import.meta.env.VITE_API_URL || '';
 const NGROK_HEADERS = {
   'ngrok-skip-browser-warning': '69420',
   Accept: 'application/json',

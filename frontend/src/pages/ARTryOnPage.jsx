@@ -7,7 +7,7 @@ import useStore from '../store/useStore.js'
 
 // Gunakan URL relatif agar semua request lewat Vite proxy
 // Ini membuat HP (via Cloudflare) dan Laptop (via localhost) bekerja tanpa CORS
-const NGROK_BACKEND_URL = '';
+const NGROK_BACKEND_URL = import.meta.env.VITE_API_URL || '';
 
 const NGROK_HEADERS = {
   "ngrok-skip-browser-warning": "69420",
